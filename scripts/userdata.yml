@@ -25,7 +25,11 @@ tasks:
 
 
 
-      $instType = (Invoke-WebRequest -Uri "http://169.254.169.254/latest/meta-data/instance-type").Content
+      $token = Invoke-RestMethod 'http://169.254.169.254/latest/api/token' -Method Put -Headers @{ "X-aws-ec2-metadata-token-ttl-seconds" = 21600 }
+
+
+
+      $instType = Invoke-RestMethod 'http://169.254.169.254/latest/meta-data/instance-type' -Headers @{ "X-aws-ec2-metadata-token" = $token }
       if ($instType.StartsWith("g")) {
         # pip3 install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu117
 
@@ -75,7 +79,7 @@ tasks:
 
       # インスタンスメタデータから公開鍵を取得し administrators_authorized_keys に設定。
       $administratorsKeyPath = Join-Path $env:ProgramData 'ssh\administrators_authorized_keys'
-      Invoke-RestMethod -Uri http://169.254.169.254/latest/meta-data/public-keys/0/openssh-key/ |
+      Invoke-RestMethod -Uri http://169.254.169.254/latest/meta-data/public-keys/0/openssh-key/ -Headers @{ "X-aws-ec2-metadata-token" = $token } |
           Out-File -FilePath $administratorsKeyPath -Encoding ascii
 
       # ファイルのアクセスアクセス権の継承を解除。

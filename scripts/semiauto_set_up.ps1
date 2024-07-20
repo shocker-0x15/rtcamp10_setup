@@ -2,9 +2,14 @@ param (
     [string]$CudaInstaller
 )
 
-if ($CudaInstaller -ne "" -and !(Test-Path $CudaInstaller)) {
-    Write-Error "The file at path $CudaInstaller does not exist."
-    exit 1
+if ($CudaInstaller -ne "") {
+    if (!(Test-Path $CudaInstaller)) {
+        Write-Error "The file at path $CudaInstaller does not exist."
+        exit 1
+    }
+    # Write-Output "Start to download CUDA Toolkit"
+    # Copy-S3Object -BucketName rtcamp10 -Key cuda_12.5.1_555.85_windows.exe -LocalFile $CudaInstaller -Region ap-northeast-1
+    # Write-Output "Finished to download CUDA Toolkit"
 }
 
 Write-Output "Start to install miscellaneous things."
@@ -26,8 +31,6 @@ Write-Output "Finished to install miscellaneous things."
 
 
 Write-Output "Start to install NVIDIA driver"
-# ダウンロードされたパスは次のようになっている
-# "C:\Users\Administrator\Desktop\NVIDIA\windows\latest\531.79_Cloud_Gaming_win10_win11_server2019_server2022_dch_64bit_international.exe"
 $Bucket = "nvidia-gaming"
 $KeyPrefix = "windows/latest"
 $LocalPath = "$home\Desktop\NVIDIA"
@@ -52,17 +55,13 @@ else {
 
 
 $NvSmiDir = "C:\Windows\System32\DriverStore\FileRepository\nvgrid*\"
-# $CudaInstaller = "$home\Desktop\cudatoolkit.exe"
 if ($CudaInstaller -ne "") {
     Write-Output "Start to install CUDA Toolkit"
-    # # ダウンロードに50分ぐらいかかるので本番はS3からダウンロードする。
-    # # Invoke-WebRequest -Uri "https://developer.download.nvidia.com/compute/cuda/12.1.1/local_installers/cuda_12.1.1_531.14_windows.exe" -OutFile $CudaInstaller
-    # Copy-S3Object -BucketName rtcamp9-test -Key CUDA_Toolkit/cuda_12.1.1_531.14_windows.exe -LocalFile $CudaInstaller -Region ap-northeast-1
     
     # CUDA Toolkitを-s -nオプションのみでインストールすると既にインストールしたNVIDIAドライバーをCUDA Toolkit内のドライバで上書きされるらしい。
     # そうなるとVulkanが使えなくなるようなので必要そうなライブラリのみを指定してインストールする。
     # https://docs.nvidia.com/cuda/cuda-installation-guide-microsoft-windows/index.html
-    $err = (Start-Process -FilePath $CudaInstaller -ArgumentList "-s -n cudart_12.1 nvcc_12.1 nvjitlink_12.1 nvrtc_12.1 nvtx_12.1 thrust_12.1 cublas_12.1 cufft_12.1 curand_12.1 cusolver_12.1 cusparse_12.1 npp_12.1 nvjpeg_12.1" -Wait -NoNewWindow -PassThru).ExitCode
+    $err = (Start-Process -FilePath $CudaInstaller -ArgumentList "-s -n cudart_12.5 nvcc_12.5 nvjitlink_12.5 nvrtc_12.5 nvtx_12.5 thrust_12.5 cublas_12.5 cufft_12.5 curand_12.5 cusolver_12.5 cusparse_12.5 npp_12.5 nvjpeg_12.5" -Wait -NoNewWindow -PassThru).ExitCode
     if ($err -ne 0) {
         Write-Error "Failed to install CUDA Toolkit"
     }
@@ -83,7 +82,8 @@ if ($CudaInstaller -ne "") {
 # 結果の安定化のためにGPUクロックを固定する。
 # https://docs.aws.amazon.com/ja_jp/AWSEC2/latest/UserGuide/optimize_gpu.html
 cd $NvSmiDir
-$instType = (Invoke-WebRequest -Uri "http://169.254.169.254/latest/meta-data/instance-type").Content
+$token = Invoke-RestMethod 'http://169.254.169.254/latest/api/token' -Method Put -Headers @{ "X-aws-ec2-metadata-token-ttl-seconds" = 21600 }
+$instType = Invoke-RestMethod 'http://169.254.169.254/latest/meta-data/instance-type' -Headers @{ "X-aws-ec2-metadata-token" = $token }
 $clocks = ""
 if ($instType.Contains("g4dn")) {
     $clocks = "5001,1590"
@@ -92,6 +92,6 @@ if ($instType.Contains("g4dn")) {
 }
 $err = (Start-Process -FilePath nvidia-smi -ArgumentList "-ac",$clocks -Wait -NoNewWindow -PassThru).ExitCode
 if ($err -ne 0) {
-    Write-Error "Failed to nvidia-smi"
+    Write-Error "Failed to fix GPU clock"
 }
 Write-Output "Fixed GPU clock"
