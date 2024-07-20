@@ -45,7 +45,7 @@ if ($err -ne 0) {
 }
 else {
     New-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Services\nvlddmkm\Global" -Name "vGamingMarketplace" -PropertyType "DWord" -Value "2"
-    Invoke-WebRequest -Uri "https://nvidia-gaming.s3.amazonaws.com/GridSwCert-Archive/GridSwCertWindows_2021_10_2.cert" -OutFile "$Env:PUBLIC\Documents\GridSwCert.txt"
+    Invoke-WebRequest -Uri "https://nvidia-gaming.s3.amazonaws.com/GridSwCert-Archive/GridSwCertWindows_2023_9_22.cert" -OutFile "$Env:PUBLIC\Documents\GridSwCert.txt"
     Write-Output "Finished to install NVIDIA driver"
 }
 
@@ -83,7 +83,14 @@ if ($CudaInstaller -ne "") {
 # 結果の安定化のためにGPUクロックを固定する。
 # https://docs.aws.amazon.com/ja_jp/AWSEC2/latest/UserGuide/optimize_gpu.html
 cd $NvSmiDir
-$err = (Start-Process -FilePath nvidia-smi -ArgumentList "-ac","5001,1590" -Wait -NoNewWindow -PassThru).ExitCode
+$instType = (Invoke-WebRequest -Uri "http://169.254.169.254/latest/meta-data/instance-type").Content
+$clocks = ""
+if ($instType.Contains("g4dn")) {
+    $clocks = "5001,1590"
+} elseif ($instType.Contains("g5")) {
+    $clocks = "6250,1710"
+}
+$err = (Start-Process -FilePath nvidia-smi -ArgumentList "-ac",$clocks -Wait -NoNewWindow -PassThru).ExitCode
 if ($err -ne 0) {
     Write-Error "Failed to nvidia-smi"
 }

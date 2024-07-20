@@ -25,13 +25,19 @@ tasks:
 
 
 
-      $InstType = (Invoke-WebRequest -Uri "http://169.254.169.254/latest/meta-data/instance-type").Content
-      if ($InstType -eq "g4dn.xlarge") {
+      $instType = (Invoke-WebRequest -Uri "http://169.254.169.254/latest/meta-data/instance-type").Content
+      if ($instType.StartsWith("g")) {
         # pip3 install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu117
 
         # 結果の安定化のためにGPUクロックを固定する。
         # https://docs.aws.amazon.com/ja_jp/AWSEC2/latest/UserGuide/optimize_gpu.html
-        $err = (Start-Process -FilePath nvidia-smi -ArgumentList "-ac","5001,1590" -Wait -NoNewWindow -PassThru).ExitCode
+        $clocks = ""
+        if ($instType.Contains("g4dn")) {
+          $clocks = "5001,1590"
+        } elseif ($instType.Contains("g5")) {
+          $clocks = "6250,1710"
+        }
+        $err = (Start-Process -FilePath nvidia-smi -ArgumentList "-ac",$clocks -Wait -NoNewWindow -PassThru).ExitCode
         if ($err -ne 0) {
           Write-Error "Failed to fix GPU clock."
         }
