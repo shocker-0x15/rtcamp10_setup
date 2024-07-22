@@ -102,5 +102,5 @@ tasks:
 
 
       # 異なるインスタンス上のアプリケーション間で直接通信する際のポートを許可しておく。
-      New-NetFirewallRule -DisplayName 'RTCamp9 App to App' -Profile 'Any' -Direction 'Inbound' -Action 'Allow' -Protocol 'TCP' -LocalPort 12345
+      New-NetFirewallRule -DisplayName 'RTCamp10 App to App' -Profile 'Any' -Direction 'Inbound' -Action 'Allow' -Protocol 'TCP' -LocalPort 12345
 - task: enableOpenSsh

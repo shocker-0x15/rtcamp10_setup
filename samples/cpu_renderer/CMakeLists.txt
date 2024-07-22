@@ -1,4 +1,4 @@
-set(TARGET_NAME "usecase2")
+set(TARGET_NAME "cpu_renderer")
 
 file(
     GLOB_RECURSE SOURCES
