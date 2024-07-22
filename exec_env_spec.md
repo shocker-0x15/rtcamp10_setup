@@ -40,7 +40,8 @@ EC2インスタンスは以下のいずれか：
 | [c7i.metal-48xl](https://aws.amazon.com/jp/ec2/instance-types/c7i/) | 19.6176 | Intel Xeon Scalable<br/>[Sapphire Rapids](https://www.intel.co.jp/content/www/jp/ja/products/docs/processors/xeon-accelerated/4th-gen-xeon-scalable-processors.html)<br>192 vCPU | 384 GiB | N/A | N/A | EBS | N/A |
 
 - python 3.11.4がインストールされています。\
-  pythonライブラリとしては数値計算用にnumpy, scipy、画像処理にPillow、SSH操作用にparamikoをインストールしています。
+  pythonライブラリとしては数値計算用にnumpy, scipy、画像処理にPillow、SSH操作用にparamikoをインストールしています。\
+  何か追加のライブラリが必要な場合運営に早めに連絡してください。
 - GPUインスタンスはDirectX 12, Vulkan, OptiX 8.0が動作するドライバー、CUDA 12.5がインストールされています。
 - GPUインスタンスはインスタンスストア付きではありますが、特に要望がない限り設定しません。
 
@@ -49,7 +50,7 @@ EC2インスタンスは以下のいずれか：
 提出物内の `<root directory>` をホームディレクトリに配置します。すなわち `run.ps1` は次の絶対パスに配置されることになります。\
 `C:\Users\Administrator\<root directory>\run.ps1`
 
-- 画像出力は.pngまたは.jpgで000.png, 001.png, ...と0開始、3桁の連番で `<root directory>` に出力してください。
+- 画像出力は.pngまたは.jpgで000.png, 001.png, ...と0開始、3桁の連番で `<root directory>` に出力してください。\
   静止画の場合は000.png/jpgを最終結果として採用します。
 - ウィンドウやダイアログを出さないでください。
 - キーボードやマウスの操作を要求せずに自動でレンダリングしてください。
