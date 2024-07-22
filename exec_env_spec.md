@@ -19,16 +19,18 @@
 
 ```
 <root directory> ... 名前は参加者名とインスタンスタイプから name_(cpu|gpu) とする
-├─ run.ps1 ... 実行開始スクリプト
-├─ fps.txt ... [動画提出の場合のみ] 動画ファイルのfpsの数字だけを書き込む
-├─ ***.exe ... 実行ファイル
-├─ ***.pdf or pptx ... レンダラー紹介スライド
-└─ etc ... アセット
+├─ run.ps1 ............ 実行開始スクリプト
+├─ fps.txt ............ [動画提出の場合のみ] 動画ファイルのfpsの数字だけを書き込む
+├─ requirements.txt ... [Optional] Pythonのrequirements.txt
+├─ ***.exe ............ 実行ファイル
+├─ ***.pdf or pptx .... レンダラー紹介スライド
+└─ etc ................ アセット
 ```
 
 - zipファイルの上限サイズは1GiB(=1024MiB)です。
 - 動画を提出する場合は `fps.txt` にフレームレートの数字だけを書き込んでください。フレームレートは最低10、最高60とします。
 - 動画の時間は最低3秒、最高10秒とします。fpsの仕様とあわせると、最低で30枚、最高で600枚の画像出力を行うことになります。
+- Pythonに依存していて何らかのライブラリが必要な場合は [requirements.txt](https://note.nkmk.me/python-pip-install-requirements/) を同梱してください。
 - レンダラー紹介のプレゼンは一人5分です。
   - レンダラー名を入れてください。
   - 作品に対する本人の貢献度合いをフェアに判断するため使用した主要なライブラリや3Dデータの出処について明記してください。
@@ -41,9 +43,9 @@ EC2インスタンスは以下のいずれか：
 | [g5.xlarge](https://aws.amazon.com/jp/ec2/instance-types/g5/) | 1.643 | AMD EPYC 7R32<br>4 vCPU | 16 GiB | [NVIDIA A10G](https://www.nvidia.com/ja-jp/data-center/products/a10-gpu/) | 16 GiB | EBS | 250 GiB NVMe SSD |
 | [c7i.metal-48xl](https://aws.amazon.com/jp/ec2/instance-types/c7i/) | 19.6176 | Intel Xeon Scalable<br/>[Sapphire Rapids](https://www.intel.co.jp/content/www/jp/ja/products/docs/processors/xeon-accelerated/4th-gen-xeon-scalable-processors.html)<br>192 vCPU | 384 GiB | N/A | N/A | EBS | N/A |
 
+- OSはWindows Server 2022 Baseを使います。
 - python 3.11.4がインストールされています。\
-  pythonライブラリとしては数値計算用にnumpy, scipy、画像処理にPillow、SSH操作用にparamikoをインストールしています。\
-  何か追加のライブラリが必要な場合運営に早めに連絡してください。
+  pythonライブラリとしては数値計算用にnumpy, scipy、画像処理にPillow、SSH操作用にparamikoをインストールしています。
 - GPUインスタンスはDirectX 12, Vulkan, OptiX 8.0が動作するドライバー、CUDA 12.5がインストールされています。
 - GPUインスタンスはインスタンスストア付きではありますが、特に要望がない限り設定しません。
 
