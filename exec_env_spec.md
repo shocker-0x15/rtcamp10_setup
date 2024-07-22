@@ -46,7 +46,7 @@ EC2インスタンスは以下のいずれか：
 - OSはWindows Server 2022 Baseを使います。
 - python 3.11.4がインストールされています。\
   pythonライブラリとしては数値計算用にnumpy, scipy、画像処理にPillow、SSH操作用にparamikoをインストールしています。
-- GPUインスタンスはDirectX 12, Vulkan, OptiX 8.0が動作するドライバー、CUDA 12.5がインストールされています。
+- GPUインスタンスはDirectX 12, Vulkan, OptiX 8.0が動作するドライバー、CUDA 12.5.1がインストールされています。
 - GPUインスタンスはインスタンスストア付きではありますが、特に要望がない限り設定しません。
 
 ### 実行
