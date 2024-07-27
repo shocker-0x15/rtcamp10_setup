@@ -40,7 +40,7 @@
 EC2インスタンスは以下のいずれか：
 | インスタンスタイプ | 料金<br/>USD/h/inst | CPU | System Mem | GPU | GPU Mem | ストレージ | インスタンスストア |
 | - | - | - | - | - | - | - | - |
-| [g5.xlarge](https://aws.amazon.com/jp/ec2/instance-types/g5/) | 1.643 | AMD EPYC 7R32<br>4 vCPU | 16 GiB | [NVIDIA A10G](https://www.nvidia.com/ja-jp/data-center/products/a10-gpu/) | 16 GiB | EBS | 250 GiB NVMe SSD |
+| [g5.xlarge](https://aws.amazon.com/jp/ec2/instance-types/g5/) | 1.643 | AMD EPYC 7R32<br>4 vCPU | 16 GiB | [NVIDIA A10G](https://www.nvidia.com/ja-jp/data-center/products/a10-gpu/) | 24 GiB | EBS | 250 GiB NVMe SSD |
 | [c7i.metal-48xl](https://aws.amazon.com/jp/ec2/instance-types/c7i/) | 19.6176 | Intel Xeon Scalable<br/>[Sapphire Rapids](https://www.intel.co.jp/content/www/jp/ja/products/docs/processors/xeon-accelerated/4th-gen-xeon-scalable-processors.html)<br>192 vCPU | 384 GiB | N/A | N/A | EBS | N/A |
 
 - OSはWindows Server 2022 Baseを使います。
