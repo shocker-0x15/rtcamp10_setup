@@ -16,9 +16,9 @@ tasks:
       scoop bucket add extras
 
       scoop install ffmpeg
+      # AMIから起動した場合シンボリックリンク周りで何かおかしくなることがあるのか、pythonコマンドが効かなかったりするので再インストール。
+      scoop uninstall python
       scoop install python@3.11.4
-      # AMIから起動した場合シンボリックリンク周りで何かおかしくなることがあるのか、pythonコマンドが効かなかったりするのでupdateで修正。
-      scoop update python
 
       pip install paramiko
       pip install numpy
