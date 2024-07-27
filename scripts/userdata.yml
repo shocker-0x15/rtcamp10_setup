@@ -8,13 +8,17 @@ tasks:
     content: |-
       Write-Output "Start to install miscellaneous things."
 
-      Invoke-Expression "& {$(Invoke-RestMethod get.scoop.sh)} -RunAsAdmin"
+      if (-not [Boolean](Get-Command scoop -ErrorAction SilentlyContinue)) {
+        Invoke-Expression "& {$(Invoke-RestMethod get.scoop.sh)} -RunAsAdmin"
+      }
       scoop install git
       scoop update
       scoop bucket add extras
 
       scoop install ffmpeg
       scoop install python@3.11.4
+      # AMIから起動した場合シンボリックリンク周りで何かおかしくなることがあるのか、pythonコマンドが効かなかったりするのでupdateで修正。
+      scoop update python
 
       pip install paramiko
       pip install numpy
