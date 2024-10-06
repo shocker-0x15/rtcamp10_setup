@@ -86,7 +86,7 @@ tasks:
       Invoke-RestMethod -Uri http://169.254.169.254/latest/meta-data/public-keys/0/openssh-key/ -Headers @{ "X-aws-ec2-metadata-token" = $token } |
           Out-File -FilePath $administratorsKeyPath -Encoding ascii
 
-      # ファイルのアクセスアクセス権の継承を解除。
+      # ファイルのアクセス権の継承を解除。
       $acl = Get-Acl $administratorsKeyPath
       $acl.SetAccessRuleProtection($true, $true)
       $acl | Set-Acl -Path $administratorsKeyPath

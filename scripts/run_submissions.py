@@ -28,6 +28,10 @@ def run():
     time_limit = 256 + 10
     # time_limit = 30 + 10
 
+    # pwsh = 'powershell'
+    # Powershell 7以降を導入した場合
+    pwsh = 'pwsh'
+
     if not submission_dir.exists():
         print('Submission directory does not exist.')
         return -1
@@ -36,7 +40,7 @@ def run():
 
     result_dir.mkdir(parents=True, exist_ok=True)
 
-    img_regex = re.compile(r'\d\d\d\.(png|jpg|jpeg)')
+    img_regex = re.compile(r'.*\d\d\d\.(png|jpg|jpeg)')
 
 
 
@@ -111,7 +115,7 @@ def run():
         start_time = time.time()
 
         # レンダリング実行。
-        cmd = ['powershell', '-ExecutionPolicy', 'Bypass', '-File', './run.ps1']
+        cmd = [pwsh, '-ExecutionPolicy', 'Bypass', '-File', './run.ps1']
         # cmd = ['./run.sh']
         stderr = None
         try:
