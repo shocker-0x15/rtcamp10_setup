@@ -13,14 +13,18 @@ def chdir(dst):
     os.chdir(dst)
     return oldDir
 
+encoding='cp932'
+
 def run_command(cmd, timeout=None):
     print(' '.join(cmd))
-    return subprocess.run(cmd, check=True, timeout=timeout, capture_output=True, text=True)
+    return subprocess.run(
+        cmd, check=True, timeout=timeout, capture_output=True, text=True,
+        encoding=encoding)
 
 def run():
     submission_dir = Path(sys.argv[1])
     result_dir = Path(sys.argv[2])
-    dir_to_place = Path(sys.argv[3]) if sys.argv[3] != "" else Path.home()
+    dir_to_place = Path(sys.argv[3]) if sys.argv[3] != "-" else Path.home()
     time_limit = 256 + 10
     # time_limit = 30 + 10
 
@@ -41,11 +45,13 @@ def run():
         if not entry.is_file():
             continue
 
+        misc_msg = ''
+
         # zipをホームディレクトリに展開。
         with zipfile.ZipFile(entry, 'r') as zip_ref:
             ext_files = zip_ref.namelist()
             root_dir_name = os.path.commonprefix(ext_files)
-            if root_dir_name == '':
+            if root_dir_name == '' or '/' not in root_dir_name:
                 root_dir_name = entry.stem
                 zip_ref.extractall(dir_to_place / root_dir_name)
             else:
@@ -123,13 +129,11 @@ def run():
 
         # 標準出力とエラー出力を書き出す。
         if stdout:
-            with open(dst_dir / 'stdout.log', 'w') as f:
+            with open(dst_dir / 'stdout.log', 'w', encoding=encoding) as f:
                 f.write(stdout)
         if stderr:
-            with open(dst_dir / 'stderr.log', 'w') as f:
+            with open(dst_dir / 'stderr.log', 'w', encoding=encoding) as f:
                 f.write(stderr)
-
-        misc_msg = ''
 
         # ローカルマシンのレンダリング実行後のファイルリストを取得。
         files = get_local_file_list(working_dir)
